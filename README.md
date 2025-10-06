@@ -1,46 +1,225 @@
-# Getting Started with Create React App
+# Atılım Modern Sera - Corporate Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Modern sera kurulum sistemleri için profesyonel kurumsal web sitesi ve yönetim paneli.
 
-## Available Scripts
+## 🚀 Özellikler
 
-In the project directory, you can run:
+### Frontend (React + TypeScript)
+- ✅ **Modern Tasarım**: Tailwind CSS ile responsive ve modern arayüz
+- ✅ **Hero Slider**: Dinamik resim slider'ı (admin panelinden yönetilebilir)
+- ✅ **Hizmetler**: Sera ve topraksız tarım hizmetleri
+- ✅ **Projeler**: Tamamlanan projeler galerisi
+- ✅ **Blog**: SEO dostu blog sistemi
+- ✅ **İletişim**: Google Maps entegrasyonu ve iletişim formu
+- ✅ **FAQ**: Sık sorulan sorular bölümü
 
-### `npm start`
+### Backend (Node.js + Express.js + SQLite)
+- ✅ **RESTful API**: Tam CRUD operasyonları
+- ✅ **JWT Authentication**: Güvenli admin girişi
+- ✅ **SQLite Database**: Hafif ve hızlı veritabanı
+- ✅ **Rate Limiting**: API güvenliği
+- ✅ **CORS Support**: Cross-origin istekler
+- ✅ **Input Validation**: Veri doğrulama
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Admin Panel
+- ✅ **Dashboard**: Site istatistikleri
+- ✅ **Blog Yönetimi**: Blog yazıları ekleme/düzenleme/silme
+- ✅ **Hizmet Yönetimi**: Hizmetler ekleme/düzenleme/silme
+- ✅ **Proje Yönetimi**: Projeler ekleme/düzenleme/silme
+- ✅ **Slider Yönetimi**: Ana sayfa slider resimlerini yönetme
+- ✅ **Site Ayarları**: Genel site ayarları
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🛠️ Kurulum
 
-### `npm test`
+### Gereksinimler
+- Node.js 16+
+- npm veya yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Backend Kurulumu
 
-### `npm run build`
+```bash
+# Backend dizinine git
+cd backend
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Bağımlılıkları yükle
+npm install
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Sunucuyu başlat
+npm run dev
+# veya
+node server.js
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Backend server `http://localhost:5001` adresinde çalışacaktır.
 
-### `npm run eject`
+### Frontend Kurulumu
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+# Ana dizine git
+cd ..
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Bağımlılıkları yükle
+npm install
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+# Development server'ı başlat
+npm start
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+# Production build
+npm run build
+```
 
-## Learn More
+Frontend `http://localhost:3000` adresinde çalışacaktır.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📊 API Endpoints
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Authentication
+- `POST /api/auth/login` - Admin girişi
+- `GET /api/auth/me` - Kullanıcı bilgileri
+- `POST /api/auth/logout` - Çıkış
+
+### Blog
+- `GET /api/blog` - Tüm blog yazıları
+- `GET /api/blog/:id` - Tekil blog yazısı
+- `POST /api/blog` - Yeni blog yazısı (Admin)
+- `PUT /api/blog/:id` - Blog yazısı güncelle (Admin)
+- `DELETE /api/blog/:id` - Blog yazısı sil (Admin)
+
+### Services
+- `GET /api/services` - Tüm hizmetler
+- `GET /api/services/:slug` - Tekil hizmet
+- `POST /api/services` - Yeni hizmet (Admin)
+- `PUT /api/services/:id` - Hizmet güncelle (Admin)
+- `DELETE /api/services/:id` - Hizmet sil (Admin)
+
+### Projects
+- `GET /api/projects` - Tüm projeler
+- `GET /api/projects/:id` - Tekil proje
+- `POST /api/projects` - Yeni proje (Admin)
+- `PUT /api/projects/:id` - Proje güncelle (Admin)
+- `DELETE /api/projects/:id` - Proje sil (Admin)
+
+### Slider
+- `GET /api/slider` - Aktif slider resimleri
+- `GET /api/slider/admin` - Tüm slider resimleri (Admin)
+- `POST /api/slider` - Yeni slider resmi (Admin)
+- `PUT /api/slider/:id` - Slider resmi güncelle (Admin)
+- `DELETE /api/slider/:id` - Slider resmi sil (Admin)
+
+### Settings
+- `GET /api/settings` - Genel site ayarları
+- `GET /api/settings/admin` - Tüm ayarlar (Admin)
+- `GET /api/settings/stats` - Site istatistikleri (Admin)
+- `PUT /api/settings` - Ayarları güncelle (Admin)
+
+## 🔐 Admin Girişi
+
+Admin paneline erişim için:
+- **URL**: `http://localhost:3000/admin`
+- **Kullanıcı Adı**: `admin`
+- **Şifre**: `admin123`
+
+## 📁 Proje Yapısı
+
+```
+corporate-ui/
+├── backend/                 # Node.js backend
+│   ├── database/           # SQLite veritabanı
+│   ├── middleware/         # Middleware fonksiyonları
+│   ├── routes/            # API route'ları
+│   ├── server.js          # Ana server dosyası
+│   └── package.json       # Backend bağımlılıkları
+├── src/                   # React frontend
+│   ├── components/        # React component'leri
+│   ├── pages/            # Sayfa component'leri
+│   ├── assets/           # Statik dosyalar
+│   └── App.tsx           # Ana uygulama
+├── public/               # Public dosyalar
+└── package.json          # Frontend bağımlılıkları
+```
+
+## 🎨 Teknolojiler
+
+### Frontend
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **React Router** - Routing
+- **React Hooks** - State management
+
+### Backend
+- **Node.js** - Runtime
+- **Express.js** - Web framework
+- **SQLite3** - Database
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
+- **Helmet** - Security
+- **CORS** - Cross-origin support
+- **Morgan** - Logging
+
+## 🔧 Geliştirme
+
+### Backend Geliştirme
+```bash
+cd backend
+npm run dev  # Nodemon ile otomatik restart
+```
+
+### Frontend Geliştirme
+```bash
+npm start    # Development server
+npm run build  # Production build
+npm test     # Test çalıştır
+```
+
+## 📈 Özellikler
+
+### Admin Panel Özellikleri
+- 📊 **Dashboard**: Gerçek zamanlı site istatistikleri
+- 📝 **Blog Yönetimi**: Tam CRUD operasyonları
+- 🔧 **Hizmet Yönetimi**: Kategori bazlı hizmet yönetimi
+- 🏗️ **Proje Yönetimi**: Öne çıkan proje işaretleme
+- 🖼️ **Slider Yönetimi**: Sıralama ve aktif/pasif durumu
+- ⚙️ **Site Ayarları**: SEO ve iletişim bilgileri
+
+### Frontend Özellikleri
+- 📱 **Responsive Design**: Tüm cihazlarda uyumlu
+- 🎨 **Modern UI**: Tailwind CSS ile şık tasarım
+- 🔍 **SEO Optimized**: Meta tags ve structured data
+- 🚀 **Performance**: Optimized images ve lazy loading
+- 🌐 **Multi-language Ready**: Türkçe içerik desteği
+
+## 🚀 Deployment
+
+### Production Build
+```bash
+# Frontend build
+npm run build
+
+# Backend production
+cd backend
+NODE_ENV=production node server.js
+```
+
+### Environment Variables
+Backend için `.env` dosyası oluşturun:
+```
+PORT=5000
+JWT_SECRET=your_secret_key
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123
+NODE_ENV=production
+```
+
+## 📞 İletişim
+
+- **Website**: [Atılım Modern Sera](http://localhost:3000)
+- **Admin Panel**: [Admin Dashboard](http://localhost:3000/admin)
+- **API Docs**: [API Documentation](http://localhost:5001/api)
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
+
+---
+
+**Not**: Bu proje geliştirme amaçlıdır. Production kullanımı için güvenlik ayarlarını gözden geçirin.
