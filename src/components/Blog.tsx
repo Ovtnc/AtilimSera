@@ -247,28 +247,7 @@ const Blog: React.FC = () => {
           </div>
         )}
 
-        {/* Newsletter Signup */}
-        <div className="mt-20 bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl p-8 text-center">
-          <div className="max-w-2xl mx-auto">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Blog Güncellemelerini Kaçırmayın
-            </h3>
-            <p className="text-green-100 mb-6">
-              En son tarım teknolojileri ve yenilikler hakkındaki güncellemeleri 
-              e-posta ile almak için abone olun.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="E-posta adresiniz"
-                className="flex-1 px-4 py-3 border-0 rounded-lg focus:outline-none focus:ring-4 focus:ring-white/30 bg-white text-gray-900"
-              />
-              <button className="bg-white text-green-600 font-semibold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors">
-                Abone Ol
-              </button>
-            </div>
-          </div>
-        </div>
+      
       </div>
     </section>
   );

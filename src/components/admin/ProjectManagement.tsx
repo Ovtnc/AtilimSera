@@ -258,6 +258,18 @@ const ProjectManagement: React.FC = () => {
     setNewProject({ ...newProject, cover_image: imageUrl });
   };
 
+  const handleMediaUpload = (imageUrl: string) => {
+    // Check if uploaded file is video based on URL
+    const videoExtensions = ['.mp4', '.mov', '.avi', '.wmv', '.webm'];
+    const isVideo = videoExtensions.some(ext => imageUrl.toLowerCase().includes(ext));
+    
+    setNewMedia({ 
+      ...newMedia, 
+      media_url: imageUrl,
+      media_type: isVideo ? 'video' : 'image'
+    });
+  };
+
   const fetchProjectMedia = async (projectId: number) => {
     try {
       const token = localStorage.getItem('token');
@@ -277,34 +289,14 @@ const ProjectManagement: React.FC = () => {
 
   const addMediaToProject = async (projectId: number) => {
     try {
-      if (!newMedia.file) {
-        alert('Lütfen bir dosya seçin!');
+      if (!newMedia.media_url) {
+        alert('Lütfen bir medya yükleyin!');
         return;
       }
 
       const token = localStorage.getItem('token');
-      
-      // Önce dosyayı yükle
-      const formData = new FormData();
-      formData.append('image', newMedia.file);
 
-      const uploadResponse = await fetch('http://localhost:5001/api/upload', {
-        method: 'POST',
-        headers: {
-          ...(token && { 'Authorization': `Bearer ${token}` })
-        },
-        body: formData
-      });
-
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(`Dosya yüklenemedi: ${errorData.error || uploadResponse.statusText}`);
-      }
-
-      const uploadData = await uploadResponse.json();
-      const mediaUrl = uploadData.imageUrl;
-
-      // Şimdi medyayı projeye ekle
+      // Medyayı projeye ekle
       const response = await fetch(`http://localhost:5001/api/projects/${projectId}/media`, {
         method: 'POST',
         headers: {
@@ -312,7 +304,7 @@ const ProjectManagement: React.FC = () => {
           ...(token && { 'Authorization': `Bearer ${token}` })
         },
         body: JSON.stringify({
-          media_url: mediaUrl,
+          media_url: newMedia.media_url,
           media_type: newMedia.media_type,
           alt_text: newMedia.alt_text,
           title: newMedia.title,
@@ -669,40 +661,17 @@ const ProjectManagement: React.FC = () => {
               <div className="bg-gray-50 p-4 rounded-lg mb-6">
                 <h4 className="text-lg font-semibold mb-4">Yeni Medya Ekle</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
+                  <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Medya Dosyası</label>
-                    <input
-                      type="file"
-                      accept="image/*,video/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          // Dosya türünü belirle
-                          const mediaType = file.type.startsWith('video/') ? 'video' : 'image';
-                          setNewMedia({ 
-                            ...newMedia, 
-                            media_url: '', // URL'yi temizle
-                            media_type: mediaType,
-                            file: file // Dosyayı sakla
-                          });
-                        }
-                      }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    <ImageUpload
+                      onImageUpload={handleMediaUpload}
+                      currentImage={newMedia.media_url}
+                      placeholder="Görsel veya video seçin"
+                      acceptVideo={true}
                     />
-                    {newMedia.file && (
-                      <p className="text-sm text-gray-600 mt-1">
-                        Seçilen dosya: {newMedia.file.name}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Medya Türü</label>
-                    <div className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50">
-                      <span className="text-gray-700">
-                        {newMedia.media_type === 'image' ? '📷 Resim' : newMedia.media_type === 'video' ? '🎥 Video' : 'Dosya seçilmedi'}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">Dosya türü otomatik olarak belirlenir</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Tür: {newMedia.media_type === 'image' ? '📷 Resim' : newMedia.media_type === 'video' ? '🎥 Video' : 'Dosya seçilmedi'}
+                    </p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Başlık</label>
@@ -747,14 +716,14 @@ const ProjectManagement: React.FC = () => {
                 <div className="flex justify-end mt-4">
                   <button
                     onClick={() => addMediaToProject(editingProject.id)}
-                    disabled={!newMedia.file}
+                    disabled={!newMedia.media_url}
                     className={`px-4 py-2 rounded-lg transition-colors ${
-                      newMedia.file 
+                      newMedia.media_url 
                         ? 'bg-emerald-600 text-white hover:bg-emerald-700' 
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     }`}
                   >
-                    {newMedia.file ? 'Medya Ekle' : 'Dosya Seçin'}
+                    {newMedia.media_url ? 'Medya Ekle' : 'Dosya Yükleyin'}
                   </button>
                 </div>
               </div>

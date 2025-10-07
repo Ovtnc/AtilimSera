@@ -38,30 +38,50 @@ router.get('/', (req, res) => {
       return res.status(500).json({ error: 'Database error' });
     }
     
-    // Get total count for pagination
-    let countQuery = 'SELECT COUNT(*) as total FROM projects';
-    let countParams = [];
-    
-    if (conditions.length > 0) {
-      countQuery += ' WHERE ' + conditions.join(' AND ');
-      countParams = params.slice(0, -2); // Remove limit and offset
-    }
-    
-    db.get(countQuery, countParams, (err, countResult) => {
-      if (err) {
-        return res.status(500).json({ error: 'Database error' });
-      }
-      
-      res.json({
-        projects,
-        pagination: {
-          page: parseInt(page),
-          limit: parseInt(limit),
-          total: countResult.total,
-          pages: Math.ceil(countResult.total / limit)
-        }
+    // Get media for each project
+    const projectsWithMedia = projects.map(project => {
+      return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM project_media WHERE project_id = ? ORDER BY order_position ASC', [project.id], (err, media) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve({ ...project, media: media || [] });
+          }
+        });
       });
     });
+
+    Promise.all(projectsWithMedia)
+      .then(projectsData => {
+        // Get total count for pagination
+        let countQuery = 'SELECT COUNT(*) as total FROM projects';
+        let countParams = [];
+        
+        if (conditions.length > 0) {
+          countQuery += ' WHERE ' + conditions.join(' AND ');
+          countParams = params.slice(0, -2); // Remove limit and offset
+        }
+        
+        db.get(countQuery, countParams, (err, countResult) => {
+          if (err) {
+            return res.status(500).json({ error: 'Database error' });
+          }
+          
+          res.json({
+            projects: projectsData,
+            pagination: {
+              page: parseInt(page),
+              limit: parseInt(limit),
+              total: countResult.total,
+              pages: Math.ceil(countResult.total / limit)
+            }
+          });
+        });
+      })
+      .catch(err => {
+        console.error('Error fetching project media:', err);
+        res.status(500).json({ error: 'Database error' });
+      });
   });
 });
 
@@ -78,7 +98,14 @@ router.get('/:id', (req, res) => {
       return res.status(404).json({ error: 'Project not found' });
     }
 
-    res.json({ project });
+    // Get project media
+    db.all('SELECT * FROM project_media WHERE project_id = ? ORDER BY order_position ASC', [id], (err, media) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+      
+      res.json({ project: { ...project, media: media || [] } });
+    });
   });
 });
 

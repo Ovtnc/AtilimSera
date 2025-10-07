@@ -175,6 +175,21 @@ router.get('/images/:filename', (req, res) => {
       case '.svg':
         mimeType = 'image/svg+xml';
         break;
+      case '.mp4':
+        mimeType = 'video/mp4';
+        break;
+      case '.mov':
+        mimeType = 'video/quicktime';
+        break;
+      case '.avi':
+        mimeType = 'video/x-msvideo';
+        break;
+      case '.wmv':
+        mimeType = 'video/x-ms-wmv';
+        break;
+      case '.webm':
+        mimeType = 'video/webm';
+        break;
     }
 
     // Set headers for proper image serving

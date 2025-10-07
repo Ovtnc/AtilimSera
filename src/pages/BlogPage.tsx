@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Pagination from '../components/Pagination';
 
 interface BlogPost {
   id: number;
@@ -26,6 +27,8 @@ const BlogPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Tümü');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'popular'>('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     document.title = "Blog & Haberler | Atılım Modern Sera - Tarım Teknolojileri";
@@ -128,6 +131,17 @@ const BlogPage: React.FC = () => {
     e.preventDefault();
     // Search is already handled by the filter
   };
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredAndSortedPosts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedPosts = filteredAndSortedPosts.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchTerm, sortBy]);
 
   if (loading) {
     return (
@@ -247,7 +261,7 @@ const BlogPage: React.FC = () => {
 
                 {/* Blog Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {filteredAndSortedPosts.map((post, index) => (
+                  {paginatedPosts.map((post, index) => (
                     <article
                       key={post.id}
                       className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group cursor-pointer"
@@ -311,35 +325,19 @@ const BlogPage: React.FC = () => {
                     </article>
                   ))}
                 </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
               </>
             )}
           </div>
         </section>
 
-        {/* Newsletter Section */}
-        <section className="py-20 bg-gradient-to-r from-green-600 to-blue-600">
-          <div className="container mx-auto px-6">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Blog Güncellemelerini Kaçırmayın
-              </h2>
-              <p className="text-xl text-green-100 mb-8">
-                En son tarım teknolojileri ve yenilikler hakkındaki güncellemeleri 
-                e-posta ile almak için abone olun.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <input
-                  type="email"
-                  placeholder="E-posta adresiniz"
-                  className="flex-1 px-4 py-3 border-0 rounded-lg focus:outline-none focus:ring-4 focus:ring-white/30 bg-white text-gray-900"
-                />
-                <button className="bg-white text-green-600 font-semibold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors">
-                  Abone Ol
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
+     
       </main>
       <Footer />
     </div>

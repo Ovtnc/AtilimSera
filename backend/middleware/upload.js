@@ -34,7 +34,7 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 50 * 1024 * 1024, // 50MB limit for videos
+    fileSize: 200 * 1024 * 1024, // 200MB limit for videos
     files: 1 // Only one file at a time
   }
 });
@@ -43,7 +43,7 @@ const upload = multer({
 const handleUploadError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ error: 'Dosya boyutu 50MB\'dan küçük olmalıdır' });
+      return res.status(400).json({ error: 'Dosya boyutu 200MB\'dan küçük olmalıdır' });
     }
     if (err.code === 'LIMIT_FILE_COUNT') {
       return res.status(400).json({ error: 'Sadece bir dosya yüklenebilir' });

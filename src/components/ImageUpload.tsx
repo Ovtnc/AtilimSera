@@ -6,6 +6,7 @@ interface ImageUploadProps {
   placeholder?: string;
   className?: string;
   showPreview?: boolean;
+  acceptVideo?: boolean;
 }
 
 const API_BASE_URL = 'http://localhost:5001/api';
@@ -15,26 +16,34 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   currentImage,
   placeholder = "Görsel seçmek için tıklayın",
   className = "",
-  showPreview = true
+  showPreview = true,
+  acceptVideo = false
 }) => {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isVideo, setIsVideo] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Update preview when currentImage changes
   useEffect(() => {
     console.log('ImageUpload useEffect triggered, currentImage:', currentImage);
     if (currentImage && currentImage.trim() !== '') {
-      // Always add cache-busting to ensure fresh image loading
-      const imageUrlWithCache = currentImage.includes('?t=') 
+      // Check if it's a video
+      const videoExtensions = ['.mp4', '.mov', '.avi', '.wmv', '.webm'];
+      const isVideoFile = videoExtensions.some(ext => currentImage.toLowerCase().includes(ext));
+      setIsVideo(isVideoFile);
+      
+      // Always add cache-busting to ensure fresh media loading
+      const mediaUrlWithCache = currentImage.includes('?t=') 
         ? currentImage 
         : `${currentImage}?t=${Date.now()}`;
-      console.log('Setting preview:', imageUrlWithCache);
-      setPreview(imageUrlWithCache);
+      console.log('Setting preview:', mediaUrlWithCache, 'isVideo:', isVideoFile);
+      setPreview(mediaUrlWithCache);
     } else {
       console.log('Setting preview to null');
       setPreview(null);
+      setIsVideo(false);
     }
   }, [currentImage]);
 
@@ -44,14 +53,25 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     if (!file) return;
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
-      setError('Sadece görsel dosyaları yüklenebilir');
+    const isImageFile = file.type.startsWith('image/');
+    const isVideoFile = file.type.startsWith('video/');
+    
+    if (!isImageFile && !isVideoFile) {
+      setError('Sadece görsel ve video dosyaları yüklenebilir');
+      return;
+    }
+    
+    if (isVideoFile && !acceptVideo) {
+      setError('Bu alan sadece görsel dosyaları kabul eder');
       return;
     }
 
-    // Validate file size (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setError('Dosya boyutu 5MB\'dan küçük olmalıdır');
+    // Validate file size (200MB for videos, 10MB for images)
+    const maxSize = isVideoFile ? 200 * 1024 * 1024 : 10 * 1024 * 1024;
+    const maxSizeText = isVideoFile ? '200MB' : '10MB';
+    
+    if (file.size > maxSize) {
+      setError(`Dosya boyutu ${maxSizeText}'dan küçük olmalıdır`);
       return;
     }
 
@@ -87,12 +107,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const data = await response.json();
       console.log('Upload successful, data:', data);
       
-      // Add cache-busting parameter to image URL
-      const imageUrlWithCache = `${data.imageUrl}?t=${Date.now()}`;
-      console.log('Setting preview to:', imageUrlWithCache);
+      // Check if uploaded file is video
+      const uploadedIsVideo = file.type.startsWith('video/');
+      setIsVideo(uploadedIsVideo);
+      
+      // Add cache-busting parameter to media URL
+      const mediaUrlWithCache = `${data.imageUrl}?t=${Date.now()}`;
+      console.log('Setting preview to:', mediaUrlWithCache, 'isVideo:', uploadedIsVideo);
       
       // Set preview immediately
-      setPreview(imageUrlWithCache);
+      setPreview(mediaUrlWithCache);
       
       // Call parent callback to update parent state
       onImageUpload(data.imageUrl);
@@ -112,6 +136,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleRemove = () => {
     setPreview(null);
     setError(null);
+    setIsVideo(false);
     onImageUpload('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -123,26 +148,44 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept={acceptVideo ? "image/*,video/*" : "image/*"}
         onChange={handleFileSelect}
         className="hidden"
       />
       
       {preview && showPreview ? (
         <div className="relative group">
-          <img
-            src={preview}
-            alt="Preview"
-            className="w-full h-48 object-cover rounded-lg border border-gray-300"
-            onLoad={() => {
-              console.log('Image loaded successfully:', preview);
-              setError(null);
-            }}
-            onError={(e) => {
-              console.error('Image load error:', preview, e);
-              setError('Görsel yüklenemedi: ' + preview);
-            }}
-          />
+          {isVideo ? (
+            <video
+              src={preview}
+              controls
+              className="w-full h-48 object-cover rounded-lg border border-gray-300"
+              onLoadedData={() => {
+                console.log('Video loaded successfully:', preview);
+                setError(null);
+              }}
+              onError={(e) => {
+                console.error('Video load error:', preview, e);
+                setError('Video yüklenemedi: ' + preview);
+              }}
+            >
+              Tarayıcınız video oynatmayı desteklemiyor.
+            </video>
+          ) : (
+            <img
+              src={preview}
+              alt="Preview"
+              className="w-full h-48 object-cover rounded-lg border border-gray-300"
+              onLoad={() => {
+                console.log('Image loaded successfully:', preview);
+                setError(null);
+              }}
+              onError={(e) => {
+                console.error('Image load error:', preview, e);
+                setError('Görsel yüklenemedi: ' + preview);
+              }}
+            />
+          )}
           <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
             <div className="flex gap-2">
               <button
@@ -176,9 +219,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             </div>
           ) : (
             <div className="text-center">
-              <div className="text-4xl text-gray-400 mb-2">📷</div>
+              <div className="text-4xl text-gray-400 mb-2">{acceptVideo ? '🎬' : '📷'}</div>
               <p className="text-sm text-gray-600">{placeholder}</p>
-              <p className="text-xs text-gray-500 mt-1">JPG, PNG, GIF, WebP (Max 5MB)</p>
+              <p className="text-xs text-gray-500 mt-1">
+                {acceptVideo 
+                  ? 'Görsel: JPG, PNG, GIF, WebP (Max 10MB) | Video: MP4, MOV, AVI, WebM (Max 200MB)' 
+                  : 'JPG, PNG, GIF, WebP (Max 10MB)'}
+              </p>
             </div>
           )}
         </div>
@@ -192,7 +239,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
       {preview && (
         <div className="text-xs text-gray-500">
-          <p>Görsel URL: <span className="font-mono break-all">{preview}</span></p>
+          <p>{isVideo ? 'Video' : 'Görsel'} URL: <span className="font-mono break-all">{preview}</span></p>
         </div>
       )}
     </div>

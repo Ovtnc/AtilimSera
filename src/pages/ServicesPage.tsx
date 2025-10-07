@@ -240,7 +240,7 @@ const ServicesPage: React.FC = () => {
     // Load services from backend API
     const fetchServices = async () => {
       try {
-        const response = await fetch('/api/services');
+        const response = await fetch('/api/services?limit=100');
         const data = await response.json();
         
         if (data.services && data.services.length > 0) {
@@ -258,6 +258,11 @@ const ServicesPage: React.FC = () => {
 
     fetchServices();
   }, [defaultServices]);
+
+  // Filter services by category
+  const filteredServices = services.filter(
+    service => selectedCategory === 'all' || service.category === selectedCategory
+  );
 
   return (
     <div className="min-h-screen bg-background-light">
@@ -311,10 +316,15 @@ const ServicesPage: React.FC = () => {
         {/* Services Grid */}
         <section className="pb-10 px-4">
           <div className="container mx-auto max-w-6xl">
+            {/* Results Count */}
+            <div className="mb-6 text-center">
+              <p className="text-gray-600">
+                <span className="font-semibold text-gray-900">{filteredServices.length}</span> hizmet bulundu
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-              {services
-                .filter(service => selectedCategory === 'all' || service.category === selectedCategory)
-                .map((service) => (
+              {filteredServices.map((service) => (
                 <div key={service.id} className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
                   {/* Service Image */}
                   <div className="relative h-64 overflow-hidden">

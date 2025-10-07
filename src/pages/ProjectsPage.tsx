@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Pagination from '../components/Pagination';
 
 interface Project {
   id: number;
@@ -24,6 +25,8 @@ const ProjectsPage: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const defaultProjects: Project[] = [
     {
@@ -117,21 +120,45 @@ const ProjectsPage: React.FC = () => {
       
       if (data.projects && data.projects.length > 0) {
         // Convert API projects to component format
-        const convertedProjects = data.projects.map((project: any) => ({
-          id: project.id,
-          title: project.title,
-          description: project.description,
-          image: project.cover_image || project.image || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-          type: project.category || 'Sera',
-          location: project.location || 'Belirtilmemiş',
-          size: 'Projeye göre değişir',
-          features: ['Modern Tasarım', 'Kaliteli Malzeme', 'Uzman Ekip'],
-          details: project.description,
-          gallery: [project.cover_image || project.image || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'],
-          category: project.category,
-          completedDate: project.completed_date,
-          order_position: project.order_position
-        }));
+        const convertedProjects = data.projects.map((project: any) => {
+          // Build gallery from project media
+          const gallery: string[] = [];
+          
+          // Add cover image first
+          if (project.cover_image) {
+            gallery.push(project.cover_image);
+          }
+          
+          // Add all media (images and videos)
+          if (project.media && Array.isArray(project.media)) {
+            project.media.forEach((media: any) => {
+              if (media.media_url) {
+                gallery.push(media.media_url);
+              }
+            });
+          }
+          
+          // Fallback if no images
+          if (gallery.length === 0) {
+            gallery.push('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+          }
+          
+          return {
+            id: project.id,
+            title: project.title,
+            description: project.description,
+            image: gallery[0], // Use first image as main image
+            type: project.category || 'Sera',
+            location: project.location || 'Belirtilmemiş',
+            size: 'Projeye göre değişir',
+            features: ['Modern Tasarım', 'Kaliteli Malzeme', 'Uzman Ekip'],
+            details: project.description,
+            gallery: gallery,
+            category: project.category,
+            completedDate: project.completed_date,
+            order_position: project.order_position
+          };
+        });
         
         // Sort projects by order_position (ascending) and then by id
         const sortedProjects = convertedProjects.sort((a: Project, b: Project) => {
@@ -166,6 +193,12 @@ const ProjectsPage: React.FC = () => {
     setSelectedProject(null);
   };
 
+  // Calculate pagination
+  const totalPages = Math.ceil(projects.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProjects = projects.slice(startIndex, endIndex);
+
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden">
       <Header />
@@ -199,8 +232,16 @@ const ProjectsPage: React.FC = () => {
                 <p className="text-lg text-gray-600 dark:text-gray-300">Projeler yükleniyor...</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map((project) => (
+              <>
+                {/* Results Count */}
+                <div className="mb-8 text-center">
+                  <p className="text-gray-600 dark:text-gray-300">
+                    <span className="font-semibold text-gray-900 dark:text-white">{projects.length}</span> proje bulundu
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {paginatedProjects.map((project) => (
                 <div 
                   key={project.id}
                   className="bg-white dark:bg-background-dark rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
@@ -232,7 +273,15 @@ const ProjectsPage: React.FC = () => {
                   </div>
                 </div>
                 ))}
-              </div>
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </>
             )}
           </div>
         </section>
@@ -267,20 +316,52 @@ const ProjectsPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <img 
-                      src={selectedProject.image} 
-                      alt={selectedProject.title}
-                      className="w-full h-64 object-cover rounded-lg mb-4"
-                    />
-                    <div className="grid grid-cols-2 gap-4">
-                      {selectedProject.gallery.slice(1).map((img, index) => (
+                    {/* Ana görsel/video */}
+                    {(() => {
+                      const isVideo = ['.mp4', '.mov', '.avi', '.wmv', '.webm'].some(ext => 
+                        selectedProject.image.toLowerCase().includes(ext)
+                      );
+                      return isVideo ? (
+                        <video
+                          src={selectedProject.image}
+                          controls
+                          className="w-full h-64 object-cover rounded-lg mb-4"
+                        >
+                          Tarayıcınız video oynatmayı desteklemiyor.
+                        </video>
+                      ) : (
                         <img 
-                          key={index}
-                          src={img} 
-                          alt={`${selectedProject.title} ${index + 2}`}
-                          className="w-full h-32 object-cover rounded-lg"
+                          src={selectedProject.image} 
+                          alt={selectedProject.title}
+                          className="w-full h-64 object-cover rounded-lg mb-4"
                         />
-                      ))}
+                      );
+                    })()}
+                    
+                    {/* Galeri */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {selectedProject.gallery.slice(1).map((mediaUrl, index) => {
+                        const isVideo = ['.mp4', '.mov', '.avi', '.wmv', '.webm'].some(ext => 
+                          mediaUrl.toLowerCase().includes(ext)
+                        );
+                        return isVideo ? (
+                          <video
+                            key={index}
+                            src={mediaUrl}
+                            controls
+                            className="w-full h-32 object-cover rounded-lg"
+                          >
+                            Video desteklenmiyor.
+                          </video>
+                        ) : (
+                          <img 
+                            key={index}
+                            src={mediaUrl} 
+                            alt={`${selectedProject.title} ${index + 2}`}
+                            className="w-full h-32 object-cover rounded-lg"
+                          />
+                        );
+                      })}
                     </div>
                   </div>
 

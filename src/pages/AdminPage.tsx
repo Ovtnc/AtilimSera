@@ -219,7 +219,7 @@ const AdminPage: React.FC = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="px-6 py-4">
+          <div className="px-6 py-1">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-semibold text-gray-900">
@@ -236,44 +236,7 @@ const AdminPage: React.FC = () => {
                 </p>
               </div>
               
-              <div className="flex items-center space-x-4">
-                {/* Search */}
-                <div className="relative hidden md:block">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Ara..."
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
-                  />
-                </div>
-                
-                {/* Notifications */}
-                <button className="relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500 rounded-md">
-                  <span className="sr-only">Bildirimleri görüntüle</span>
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM5.07 7H4a2 2 0 00-2 2v8a2 2 0 002 2h1.07M15 17h5l-5 5v-5z" />
-                  </svg>
-                  <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-white"></span>
-                </button>
-                
-                {/* Profile dropdown */}
-                <div className="relative">
-                  <button className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-                    <span className="sr-only">Kullanıcı menüsünü aç</span>
-                    <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full flex items-center justify-center">
-                      <span className="text-white font-medium text-sm">A</span>
-                    </div>
-                    <span className="ml-2 text-gray-700 font-medium hidden md:block">Admin</span>
-                    <svg className="ml-1 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+             
             </div>
           </div>
         </header>
