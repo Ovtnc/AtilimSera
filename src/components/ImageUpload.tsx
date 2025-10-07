@@ -100,12 +100,25 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Görsel yükleme başarısız');
+        let errorMessage = 'Görsel yükleme başarısız';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (parseError) {
+          // Response is not JSON, use status text
+          errorMessage = `Sunucu hatası: ${response.status} ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
-      const data = await response.json();
-      console.log('Upload successful, data:', data);
+      let data;
+      try {
+        data = await response.json();
+        console.log('Upload successful, data:', data);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        throw new Error('Sunucudan geçersiz yanıt alındı. Lütfen tekrar deneyin.');
+      }
       
       // Check if uploaded file is video
       const uploadedIsVideo = file.type.startsWith('video/');
