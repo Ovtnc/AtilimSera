@@ -116,9 +116,8 @@ router.post('/', authenticateToken, requireAdmin, upload, handleUploadError, asy
       throw writeError;
     }
 
-    // Generate public URL for the uploaded image (use uploads for serving)
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
-    const imageUrl = `${baseUrl}/uploads/images/${filename}`;
+    // Generate public URL for the uploaded image (use relative path for compatibility)
+    const imageUrl = `/uploads/images/${filename}`;
 
     res.json({
       message: 'Görsel başarıyla yüklendi',
@@ -256,11 +255,10 @@ router.get('/list', authenticateToken, requireAdmin, (req, res) => {
       .map(file => {
         const filePath = path.join(uploadsDir, file);
         const stats = fs.statSync(filePath);
-        const baseUrl = `${req.protocol}://${req.get('host')}`;
         
         return {
           filename: file,
-          url: `${baseUrl}/uploads/images/${file}`,
+          url: `/uploads/images/${file}`,
           size: stats.size,
           createdAt: stats.birthtime,
           modifiedAt: stats.mtime
