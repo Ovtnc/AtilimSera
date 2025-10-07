@@ -27,10 +27,10 @@ const ContactPage: React.FC = () => {
     setSubmitStatus('idle');
     
     console.log('Form submitted with data:', formData);
-    console.log('Sending request to: http://localhost:5001/api/contact');
+    console.log('Sending request to: /api/contact');
     
     try {
-      const response = await fetch('http://localhost:5001/api/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

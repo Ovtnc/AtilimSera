@@ -39,7 +39,7 @@ const Dashboard: React.FC = () => {
       setLoading(true);
       
       // Blog istatistikleri
-      const blogResponse = await fetch('http://localhost:5001/api/blog?limit=100');
+      const blogResponse = await fetch('/api/blog?limit=100');
       const blogData = await blogResponse.json();
       
       let totalBlogPosts = 0;
@@ -54,7 +54,7 @@ const Dashboard: React.FC = () => {
 
       // Slider istatistikleri
       const token = localStorage.getItem('token');
-      const sliderResponse = await fetch('http://localhost:5001/api/slider/admin', {
+      const sliderResponse = await fetch('/api/slider/admin', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
@@ -70,7 +70,7 @@ const Dashboard: React.FC = () => {
       }
 
       // Kategori istatistikleri
-      const categoryResponse = await fetch('http://localhost:5001/api/categories/admin/all', {
+      const categoryResponse = await fetch('/api/categories/admin/all', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
       }
 
       // Mesaj istatistikleri
-      const messageResponse = await fetch('http://localhost:5001/api/contact/stats', {
+      const messageResponse = await fetch('/api/contact/stats', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }

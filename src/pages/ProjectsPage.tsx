@@ -109,7 +109,7 @@ const ProjectsPage: React.FC = () => {
       setError(null);
       console.log('🔍 Fetching projects from API...');
       
-      const response = await fetch('http://localhost:5001/api/projects?limit=50');
+      const response = await fetch('/api/projects?limit=50');
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

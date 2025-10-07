@@ -48,7 +48,7 @@ const BlogManagement: React.FC = () => {
   const fetchBlogPosts = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5001/api/blog?limit=50');
+      const response = await fetch('/api/blog?limit=50');
       const data = await response.json();
       if (data.posts) {
         setBlogPosts(data.posts);
@@ -63,7 +63,7 @@ const BlogManagement: React.FC = () => {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/categories/admin/all', {
+      const response = await fetch('/api/categories/admin/all', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
@@ -116,8 +116,8 @@ const BlogManagement: React.FC = () => {
 
       const token = localStorage.getItem('token');
       const url = editingPost 
-        ? `http://localhost:5001/api/blog/${editingPost.id}`
-        : 'http://localhost:5001/api/blog';
+        ? `/api/blog/${editingPost.id}`
+        : '/api/blog';
       const method = editingPost ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -163,7 +163,7 @@ const BlogManagement: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/blog/${editingPost.id}`, {
+      const response = await fetch(`/api/blog/${editingPost.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ const BlogManagement: React.FC = () => {
     if (window.confirm('Bu yazıyı silmek istediğinizden emin misiniz?')) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5001/api/blog/${id}`, {
+        const response = await fetch(`/api/blog/${id}`, {
           method: 'DELETE',
           headers: {
             ...(token && { 'Authorization': `Bearer ${token}` })

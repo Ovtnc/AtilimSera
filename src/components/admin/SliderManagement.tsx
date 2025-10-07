@@ -41,7 +41,7 @@ const SliderManagement: React.FC = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/slider/admin', {
+      const response = await fetch('/api/slider/admin', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
@@ -61,8 +61,8 @@ const SliderManagement: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const url = editingSlider 
-        ? `http://localhost:5001/api/slider/${editingSlider.id}`
-        : 'http://localhost:5001/api/slider';
+        ? `/api/slider/${editingSlider.id}`
+        : '/api/slider';
       const method = editingSlider ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -104,7 +104,7 @@ const SliderManagement: React.FC = () => {
     if (window.confirm('Bu slider\'ı silmek istediğinizden emin misiniz?')) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5001/api/slider/${id}`, {
+        const response = await fetch(`/api/slider/${id}`, {
           method: 'DELETE',
           headers: {
             ...(token && { 'Authorization': `Bearer ${token}` })
@@ -128,7 +128,7 @@ const SliderManagement: React.FC = () => {
   const toggleSlider = async (id: number) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/slider/${id}/toggle`, {
+      const response = await fetch(`/api/slider/${id}/toggle`, {
         method: 'PUT',
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })

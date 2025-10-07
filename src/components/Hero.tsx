@@ -23,7 +23,7 @@ const Hero: React.FC = () => {
     const fetchSliderImages = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5001/api/slider');
+        const response = await fetch('/api/slider');
         const data = await response.json();
         
         if (data.sliders && data.sliders.length > 0) {

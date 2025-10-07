@@ -170,15 +170,28 @@ function initializeTables() {
       console.error('Error checking admin user:', err.message);
     } else if (!row) {
       const bcrypt = require('bcryptjs');
-      const hashedPassword = bcrypt.hashSync('admin123', 10);
+      const hashedPassword = bcrypt.hashSync('Atilimsera2025.', 10);
       
       db.run(`INSERT INTO users (username, password, email, role) 
-              VALUES ('admin', ?, 'admin@atilimsera.com', 'admin')`, 
+              VALUES ('atilimsera', ?, 'admin@atilimsera.com', 'admin')`, 
               [hashedPassword], function(err) {
         if (err) {
           console.error('Error creating admin user:', err.message);
         } else {
-          console.log('Default admin user created');
+          console.log('Default admin user created: atilimsera');
+        }
+      });
+    } else {
+      // Update existing admin user to new credentials
+      const bcrypt = require('bcryptjs');
+      const hashedPassword = bcrypt.hashSync('Atilimsera2025.', 10);
+      
+      db.run(`UPDATE users SET username = 'atilimsera', password = ? WHERE username = 'admin'`, 
+              [hashedPassword], function(err) {
+        if (err) {
+          console.error('Error updating admin user:', err.message);
+        } else if (this.changes > 0) {
+          console.log('Admin credentials updated: atilimsera / Atilimsera2025.');
         }
       });
     }

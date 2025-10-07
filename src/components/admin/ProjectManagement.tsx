@@ -79,7 +79,7 @@ const ProjectManagement: React.FC = () => {
       const token = localStorage.getItem('token');
       console.log('🔍 Fetching projects with token:', token ? 'Present' : 'Missing');
       
-      const response = await fetch('http://localhost:5001/api/projects/admin/all', {
+      const response = await fetch('/api/projects/admin/all', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
@@ -115,8 +115,8 @@ const ProjectManagement: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const url = editingProject 
-        ? `http://localhost:5001/api/projects/${editingProject.id}`
-        : 'http://localhost:5001/api/projects';
+        ? `/api/projects/${editingProject.id}`
+        : '/api/projects';
       const method = editingProject ? 'PUT' : 'POST';
 
       console.log('💾 Saving project:', { method, url, project: newProject });
@@ -163,7 +163,7 @@ const ProjectManagement: React.FC = () => {
     if (window.confirm('Bu projeyi silmek istediğinizden emin misiniz?')) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5001/api/projects/${id}`, {
+        const response = await fetch(`/api/projects/${id}`, {
           method: 'DELETE',
           headers: {
             ...(token && { 'Authorization': `Bearer ${token}` })
@@ -187,7 +187,7 @@ const ProjectManagement: React.FC = () => {
   const updateProjectOrder = async (id: number, newPosition: number) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/projects/${id}/order`, {
+      const response = await fetch(`/api/projects/${id}/order`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -212,7 +212,7 @@ const ProjectManagement: React.FC = () => {
   const reorderProjects = async (projectIds: number[]) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/projects/admin/reorder', {
+      const response = await fetch('/api/projects/admin/reorder', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -273,7 +273,7 @@ const ProjectManagement: React.FC = () => {
   const fetchProjectMedia = async (projectId: number) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/projects/admin/${projectId}/media`, {
+      const response = await fetch(`/api/projects/admin/${projectId}/media`, {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
@@ -297,7 +297,7 @@ const ProjectManagement: React.FC = () => {
       const token = localStorage.getItem('token');
 
       // Medyayı projeye ekle
-      const response = await fetch(`http://localhost:5001/api/projects/${projectId}/media`, {
+      const response = await fetch(`/api/projects/${projectId}/media`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -339,7 +339,7 @@ const ProjectManagement: React.FC = () => {
     if (window.confirm('Bu medyayı silmek istediğinizden emin misiniz?')) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5001/api/projects/${projectId}/media/${mediaId}`, {
+        const response = await fetch(`/api/projects/${projectId}/media/${mediaId}`, {
           method: 'DELETE',
           headers: {
             ...(token && { 'Authorization': `Bearer ${token}` })
@@ -363,7 +363,7 @@ const ProjectManagement: React.FC = () => {
   const setCoverImage = async (projectId: number, mediaId: number) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/projects/${projectId}/media/${mediaId}`, {
+      const response = await fetch(`/api/projects/${projectId}/media/${mediaId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

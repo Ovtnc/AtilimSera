@@ -52,7 +52,7 @@ const MessageManagement: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(
-        `http://localhost:5001/api/contact?status=${statusFilter}&page=${currentPage}&limit=10`,
+        `/api/contact?status=${statusFilter}&page=${currentPage}&limit=10`,
         {
           headers: {
             ...(token && { 'Authorization': `Bearer ${token}` })
@@ -77,7 +77,7 @@ const MessageManagement: React.FC = () => {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/contact/stats', {
+      const response = await fetch('/api/contact/stats', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
@@ -95,7 +95,7 @@ const MessageManagement: React.FC = () => {
   const updateMessageStatus = async (messageId: number, newStatus: string) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/contact/${messageId}/status`, {
+      const response = await fetch(`/api/contact/${messageId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ const MessageManagement: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/contact/${messageId}`, {
+      const response = await fetch(`/api/contact/${messageId}`, {
         method: 'DELETE',
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })

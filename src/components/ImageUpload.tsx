@@ -9,7 +9,7 @@ interface ImageUploadProps {
   acceptVideo?: boolean;
 }
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = '/api';
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageUpload,

@@ -52,7 +52,7 @@ const ServiceManagement: React.FC = () => {
   const fetchServices = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/services?limit=100', {
+      const response = await fetch('/api/services?limit=100', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
@@ -77,8 +77,8 @@ const ServiceManagement: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const url = editingService 
-        ? `http://localhost:5001/api/services/${editingService.id}`
-        : 'http://localhost:5001/api/services';
+        ? `/api/services/${editingService.id}`
+        : '/api/services';
       
       const method = editingService ? 'PUT' : 'POST';
       
@@ -114,7 +114,7 @@ const ServiceManagement: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/services/${id}`, {
+      const response = await fetch(`/api/services/${id}`, {
         method: 'DELETE',
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })

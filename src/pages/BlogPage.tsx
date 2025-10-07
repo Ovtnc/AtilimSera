@@ -60,7 +60,7 @@ const BlogPage: React.FC = () => {
     const fetchBlogPosts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5001/api/blog?published=true&limit=20');
+        const response = await fetch('/api/blog?published=true&limit=20');
         const data = await response.json();
         
         if (data.posts && data.posts.length > 0) {
