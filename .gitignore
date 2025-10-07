@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/backend/node_modules
 /.pnp
 .pnp.js
 
@@ -22,5 +23,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Server update script (contains password)
+# Uploads (user generated content)
+/backend/uploads/
+/src/assets/images/image-*
+/src/assets/images/video-*
+
+# Archives
+*.zip
+
+# Server management scripts (contains password)
 update-server.sh
+pm2-commands.sh

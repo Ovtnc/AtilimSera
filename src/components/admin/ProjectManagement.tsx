@@ -76,7 +76,7 @@ const ProjectManagement: React.FC = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       console.log('🔍 Fetching projects with token:', token ? 'Present' : 'Missing');
       
       const response = await fetch('/api/projects/admin/all', {
@@ -113,7 +113,7 @@ const ProjectManagement: React.FC = () => {
 
   const saveProject = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const url = editingProject 
         ? `/api/projects/${editingProject.id}`
         : '/api/projects';
@@ -162,7 +162,7 @@ const ProjectManagement: React.FC = () => {
   const deleteProject = async (id: number) => {
     if (window.confirm('Bu projeyi silmek istediğinizden emin misiniz?')) {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         const response = await fetch(`/api/projects/${id}`, {
           method: 'DELETE',
           headers: {
@@ -186,7 +186,7 @@ const ProjectManagement: React.FC = () => {
 
   const updateProjectOrder = async (id: number, newPosition: number) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch(`/api/projects/${id}/order`, {
         method: 'PUT',
         headers: {
@@ -211,7 +211,7 @@ const ProjectManagement: React.FC = () => {
 
   const reorderProjects = async (projectIds: number[]) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch('/api/projects/admin/reorder', {
         method: 'PUT',
         headers: {
@@ -272,7 +272,7 @@ const ProjectManagement: React.FC = () => {
 
   const fetchProjectMedia = async (projectId: number) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch(`/api/projects/admin/${projectId}/media`, {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
@@ -294,7 +294,7 @@ const ProjectManagement: React.FC = () => {
         return;
       }
 
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
       // Medyayı projeye ekle
       const response = await fetch(`/api/projects/${projectId}/media`, {
@@ -338,7 +338,7 @@ const ProjectManagement: React.FC = () => {
   const deleteProjectMedia = async (projectId: number, mediaId: number) => {
     if (window.confirm('Bu medyayı silmek istediğinizden emin misiniz?')) {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         const response = await fetch(`/api/projects/${projectId}/media/${mediaId}`, {
           method: 'DELETE',
           headers: {
@@ -362,7 +362,7 @@ const ProjectManagement: React.FC = () => {
 
   const setCoverImage = async (projectId: number, mediaId: number) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch(`/api/projects/${projectId}/media/${mediaId}`, {
         method: 'PUT',
         headers: {

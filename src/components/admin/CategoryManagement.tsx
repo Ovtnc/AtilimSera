@@ -38,7 +38,7 @@ const CategoryManagement: React.FC = () => {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch('/api/categories/admin/all', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
@@ -57,7 +57,7 @@ const CategoryManagement: React.FC = () => {
 
   const saveCategory = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const url = editingCategory 
         ? `/api/categories/${editingCategory.id}`
         : '/api/categories';
@@ -99,7 +99,7 @@ const CategoryManagement: React.FC = () => {
   const deleteCategory = async (id: number) => {
     if (window.confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')) {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         const response = await fetch(`/api/categories/${id}`, {
           method: 'DELETE',
           headers: {
@@ -123,7 +123,7 @@ const CategoryManagement: React.FC = () => {
 
   const toggleCategory = async (id: number) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch(`/api/categories/${id}/toggle`, {
         method: 'PUT',
         headers: {

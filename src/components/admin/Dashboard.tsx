@@ -53,7 +53,7 @@ const Dashboard: React.FC = () => {
       }
 
       // Slider istatistikleri
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const sliderResponse = await fetch('/api/slider/admin', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })

@@ -62,7 +62,7 @@ const BlogManagement: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch('/api/categories/admin/all', {
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` })
@@ -114,7 +114,7 @@ const BlogManagement: React.FC = () => {
         meta_keywords: newPost.meta_keywords || generateKeywords(newPost.title, newPost.category, newPost.tags)
       };
 
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const url = editingPost 
         ? `/api/blog/${editingPost.id}`
         : '/api/blog';
@@ -162,7 +162,7 @@ const BlogManagement: React.FC = () => {
     if (!editingPost) return;
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch(`/api/blog/${editingPost.id}`, {
         method: 'PUT',
         headers: {
@@ -189,7 +189,7 @@ const BlogManagement: React.FC = () => {
   const deletePost = async (id: number) => {
     if (window.confirm('Bu yazıyı silmek istediğinizden emin misiniz?')) {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         const response = await fetch(`/api/blog/${id}`, {
           method: 'DELETE',
           headers: {

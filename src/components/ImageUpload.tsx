@@ -83,11 +83,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const formData = new FormData();
       formData.append('image', file);
 
-      // Get token from localStorage
-      const token = localStorage.getItem('token');
+      // Get token from localStorage or sessionStorage
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       
       if (!token) {
-        throw new Error('Oturum süresi dolmuş');
+        throw new Error('Oturum süresi dolmuş. Lütfen tekrar giriş yapın.');
       }
 
       // Upload image
